@@ -40,3 +40,19 @@ sudo cp -r  $myname-httpd-logs-${timestamp}.tar /tmp/
 aws s3 \
 cp /tmp/${myname}-httpd-logs-${timestamp}.tar \
 s3://${S3_bucket}/${myname}-httpd-logs-${timestamp}.tar
+
+if [ -f /var/www/html/inventory.html ]
+then
+	 echo "File exists" 
+else
+	 echo " Log Type           Date Created          Type          Size" >>  /var/www/html/inventory.html 
+fi
+
+logtype="httpd-logs"
+type="tar"
+size=$(du -h $myname-httpd-logs-${timestamp}.tar | awk '{print $1;}')
+
+echo "$logtype        $timestamp        $type           $size" >> /var/www/html/inventory.html 
+
+[ -f /etc/cron.d/automation ] && echo "automation file exists" || echo "0 0 * * * root /root/Automation_Project/automation.sh" >> /etc/cron.d/automation
+ 
