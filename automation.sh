@@ -36,6 +36,7 @@ sudo tar -czvf  $myname-httpd-logs-${timestamp}.tar  *.log
 
 sudo cp -r  $myname-httpd-logs-${timestamp}.tar /tmp/
 
+
 aws s3 \
 cp /tmp/${myname}-httpd-logs-${timestamp}.tar \
 s3://${S3_bucket}/${myname}-httpd-logs-${timestamp}.tar
