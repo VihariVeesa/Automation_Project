@@ -1,3 +1,5 @@
+
+#!/bin/bash
 myname=sunnyvihari
 S3_bucket="upgrad-sunnyvihari"
 
@@ -45,14 +47,20 @@ if [ -f /var/www/html/inventory.html ]
 then
 	 echo "File exists" 
 else
-	 echo " Log Type           Date Created          Type          Size" >>  /var/www/html/inventory.html 
+	 echo " Log Type               Date Created      Type          Size" >>  /var/www/html/inventory.html 
 fi
 
 logtype="httpd-logs"
 type="tar"
 size=$(du -h $myname-httpd-logs-${timestamp}.tar | awk '{print $1;}')
 
-echo "$logtype        $timestamp        $type           $size" >> /var/www/html/inventory.html 
+echo " <br>  $logtype           $timestamp        $type      $size" >> /var/www/html/inventory.html 
 
-[ -f /etc/cron.d/automation ] && echo "automation file exists" || echo "0 0 * * * root /root/Automation_Project/automation.sh" >> /etc/cron.d/automation
- 
+if [ -f /etc/cron.d/automation ]
+then
+	 echo "automation file exists" 
+else
+	 sudo systemctl stop cron
+	 echo " 7 0 * * *  /root/Automation_Project/automation.sh" >> /etc/cron.d/automation
+	 sudo systemctl start cron
+fi
